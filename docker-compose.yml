@@ -3,6 +3,7 @@ services:
   backend:
     build: ./backend
     command: bash -c "python manage.py makemigrations &&
+              python manage.py makemigrations todos &&
               python manage.py migrate && 
               python manage.py runserver 0.0.0.0:8000"
     tty: true
@@ -31,5 +32,5 @@ services:
       POSTGRES_PASSWORD: ${PGPASSWORD}
     ports:
       - "5432:5432"
-    env_file: "./backend/.env"
+
   
