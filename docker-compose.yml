@@ -1,0 +1,35 @@
+
+services:
+  backend:
+    build: ./backend
+    command: bash -c "python manage.py makemigrations &&
+              python manage.py migrate && 
+              python manage.py runserver 0.0.0.0:8000"
+    tty: true
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - PGHOST=db
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3000:3000
+    restart: always
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${PGNAME}
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+    ports:
+      - "5432:5432"
+    env_file: "./backend/.env"
+  
